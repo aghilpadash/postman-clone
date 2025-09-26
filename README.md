@@ -83,9 +83,4 @@ python3 -m postman_runner.cli --collection collection.json --request-name "Slow 
 - اگر متغیری جایگزین نشد، از فعال بودن آن در فایل Environment مطمئن شوید؛ فقط مقادیر `enabled` پذیرفته می‌شوند (`postman_runner/environment.py:24`).
 - برای درخواست‌های Form-Data نوع فایل، مسیر `src` باید روی سیستم در دسترس باشد (`postman_runner/executor.py:31`).
 
-## توسعه بیشتر
-- اضافه‌کردن پوشش تست واحد برای جایگزینی متغیرها
-- پشتیبانی از به‌روزرسانی متغیرهای پس از اجرای درخواست (feature پیشنهادی)
-- افزودن خروجی HTML یا گزارش خلاصه برای CI
-
 با اجرای `python3 -m postman_runner.cli --help` می‌توانید تمام پارامترهای موجود را مشاهده کنید.
