@@ -35,6 +35,21 @@ python3 -m postman_runner.cli --collection path/to/collection.json --list
 ```
 این دستور نام تمام درخواست‌های قابل اجرا را چاپ می‌کند (`postman_runner/cli.py:20`).
 
+## اجرای تمام سرویس‌های موجود در کالکشن و ذخیره لاگ
+- برای اجرای پشت سر هم تمام درخواست‌های موجود در یک کالکشن تنها کافی است از `--run-all` استفاده کنید:
+  ```bash
+  python3 -m postman_runner.cli --collection path/to/collection.json --run-all
+  ```
+- خروجی هر سرویس (متد، URL، وضعیت، هدرها، بدنه و نتیجه‌ی Assertion ها) پشت سر هم در ترمینال چاپ می‌شود و در انتها یک جمع‌بندی PASS/FAIL برای همه درخواست‌ها نمایش داده می‌شود (`postman_runner/cli.py:125`).
+- اگر مسیر خاصی برای لاگ تعیین نکنید، کنار فایل کالکشن پوشه‌ای به نام `logs` ساخته می‌شود و گزارش کامل در فایلی مانند `<collection_name>_run.log` ذخیره خواهد شد (مثلاً `my_collection_run.log`).
+- با `--log-file` می‌توانید موقعیت دیگری تعیین کنید؛ به عنوان مثال:
+  ```bash
+  python3 -m postman_runner.cli --collection path/to/collection.json --run-all --log-file reports/all.log
+  ```
+  این فایل شامل خروجی هر سرویس و خلاصه‌ی پایانی است (`postman_runner/cli.py:149`).
+- امکان ترکیب متغیرهای Environment و Assertion های اضافه در این حالت نیز برقرار است؛ کافی است همانند اجرای تکی، سوییچ‌های `--environment` و `--assert-json` را اضافه کنید تا روی همه درخواست‌ها اعمال شوند.
+- برای تست سریع، می‌توانید از نمونه‌ی `samples/httpbin_collection.json` استفاده کنید که دو سرویس GET ساده با Assertion تعریف‌شده دارد.
+
 ## استفاده از Environment ها
 - برای مشخص‌کردن فایل Environment به صورت مستقیم:
   ```bash
@@ -82,5 +97,10 @@ python3 -m postman_runner.cli --collection collection.json --request-name "Slow 
 - خطای «Request '...' not found» یعنی نام درخواست با کالکشن همخوانی ندارد یا ساختار کالکشن متفاوت است.
 - اگر متغیری جایگزین نشد، از فعال بودن آن در فایل Environment مطمئن شوید؛ فقط مقادیر `enabled` پذیرفته می‌شوند (`postman_runner/environment.py:24`).
 - برای درخواست‌های Form-Data نوع فایل، مسیر `src` باید روی سیستم در دسترس باشد (`postman_runner/executor.py:31`).
+
+## توسعه بیشتر
+- اضافه‌کردن پوشش تست واحد برای جایگزینی متغیرها
+- پشتیبانی از به‌روزرسانی متغیرهای پس از اجرای درخواست (feature پیشنهادی)
+- افزودن خروجی HTML یا گزارش خلاصه برای CI
 
 با اجرای `python3 -m postman_runner.cli --help` می‌توانید تمام پارامترهای موجود را مشاهده کنید.
