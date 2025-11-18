@@ -20,6 +20,36 @@ pip install -r requirements.txt
 - `postman_runner/executor.py`: اجرای درخواست HTTP با استفاده از `requests`
 - `postman_runner/assertions.py`: پیاده‌سازی آزمون‌ها
 
+## میانبرهای آماده (env و run)
+برای اینکه سریع‌تر بین محیط‌ها جابه‌جا شوید و کالکشن‌ها را اجرا کنید، در ریشه پروژه پوشه‌های زیر آماده شده‌اند:
+
+- `env/`: فایل‌های Environment پستمن (نمونه `Sandbox.postman_environment.json` داخل آن قرار داده شده است).
+- `collections/`: کالکشن‌هایی که می‌خواهید مداوماً اجرا شوند (یک نمونه `test.postman_collection.json` برای شروع وجود دارد).
+- `logs/`: گزارش اجرای دستور `run` در اینجا ذخیره می‌شود. در صورت دلخواه می‌توانید مسیر دیگری به دستور بدهید.
+
+### انتخاب محیط با دستور `env`
+```
+python3 -m postman_runner.shortcuts env --list   # نمایش همه فایل‌های موجود در ./env
+python3 -m postman_runner.shortcuts env sandbox # انتخاب فایل Sandbox.postman_environment.json
+```
+پس از انتخاب، مسیر فایل در `.runner_state.json` ذخیره می‌شود تا دستورهای بعدی بدون تعیین مجدد اجرا شوند. در صورت نیاز می‌توانید دوباره دستور `env` را اجرا کرده یا فایل یادشده را حذف کنید.
+
+### اجرای کالکشن با دستور `run`
+```
+python3 -m postman_runner.shortcuts run test.postman_collection.json
+python3 -m postman_runner.shortcuts run test.postman_collection.json --request "Mng/Request/Add"
+python3 -m postman_runner.shortcuts run test.postman_collection.json --env env/Another.postman_environment.json
+```
+- اگر پارامتر `--request` نگرفته باشید تمام سرویس‌های کالکشن (معادل `--run-all`) اجرا می‌شوند و لاگی مانند `logs/test.postman_collection_sandbox.log` ساخته می‌شود.
+- با `--log-file` مسیر دلخواه خود را بدهید یا با `--timeout` زمان انتظار هر درخواست را تغییر دهید.
+
+> نکته: برای اینکه مستقیماً فرمان‌های کوتاه `env sandbox` یا `run test.json` را داشته باشید می‌توانید در shell خود alias بسازید؛ مثلا `alias env='python3 -m postman_runner.shortcuts env'` و `alias run='python3 -m postman_runner.shortcuts run'`.
+
+### فرمت جدید لاگ‌ها
+- هر سرویس با شماره `[1]`, `[2]`, ... مشخص می‌شود و پس از آن یک خط جداکننده کشیده می‌شود تا تشخیص خروجی‌ها ساده باشد.
+- اگر Assertions مربوط به سرویسی رد شوند، بخش «Failed tests» علت دقیق هر تست ناموفق را هم در لاگ و هم در خلاصه انتهایی ثبت می‌کند.
+- همین ساختار برای اجرای‌های تکی (دستور `--request-name` یا اجرای inline) نیز اعمال می‌شود.
+
 ## نحوه اجرای کالکشن
 1. از داخل Postman کالکشن موردنظر را با فرمت Collection v2.1 به صورت JSON خروجی بگیرید.
 2. فایل خروجی را به همراه فایل‌های Environment (در صورت نیاز) کنار هم قرار دهید.
